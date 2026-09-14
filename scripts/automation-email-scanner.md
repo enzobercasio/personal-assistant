@@ -34,7 +34,7 @@ any of the active customer engagements or their stakeholders.
 
 Read every `engagements/*/context.md` file (skip `_template`). For each
 customer, extract:
-- The customer name and common abbreviations (e.g. "MAS", "Monetary Authority")
+- The customer name and common abbreviations (e.g. "ACME", "Acme Corp")
 - All stakeholder names from the Stakeholders table
 - Product names relevant to the engagement (e.g. "OpenShift", "ROSA", "AAP")
 

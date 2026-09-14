@@ -16,7 +16,7 @@ morning and afternoon check — say "scan emails" or "check emails" to trigger.
 ### 1. Build the search index
 For each customer directory under `engagements/` (skip `_template`), read
 `context.md` and extract:
-- Customer name and abbreviations (e.g. "MAS", "Monetary Authority of Singapore")
+- Customer name and abbreviations (e.g. "ACME", "Acme Corp")
 - All stakeholder names from the Stakeholders table
 - Key product names relevant to the engagement
 

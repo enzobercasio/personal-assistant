@@ -4,12 +4,12 @@
 Scan Google Drive for files relevant to active customer engagements. List
 each file with metadata and assess whether it should be added to the
 engagement's `reference/` folder. Designed to run periodically — say
-"scan drive", "check drive", or "scan drive for MAS" to trigger.
+"scan drive", "check drive", or "scan drive for Acme Corp" to trigger.
 
 ## Required inputs
 - Google Drive MCP (authenticated)
 - All `engagements/<customer>/context.md` files (reads automatically)
-- Scope: defaults to all engagements; say "scan drive for MAS" to limit
+- Scope: defaults to all engagements; say "scan drive for Acme Corp" to limit
   to one customer. Say "scan drive last 7 days" to filter by recency.
 
 ## Process
@@ -17,8 +17,8 @@ engagement's `reference/` folder. Designed to run periodically — say
 ### 1. Build the search index
 For each customer directory under `engagements/` (skip `_template`), read
 `context.md` and extract:
-- Customer name and common abbreviations (e.g. "Singapore Pools", "SPPL",
-  "SingPools", "SGPools")
+- Customer name and common abbreviations (e.g. "Acme Corp", "ACME",
+  "AcmeCo", "AC")
 - Key stakeholder names
 - Product names and project codenames (e.g. "Lightspeed", "Heidi",
   "NGINE", "TMRW", "Digital Factory")
@@ -28,7 +28,7 @@ For each customer directory under `engagements/` (skip `_template`), read
 Use `gdrive_search` from the Google Drive MCP. For each customer, search
 using the customer name, abbreviations, and key project/initiative names.
 Also search for common Red Hat deliverable terms combined with the customer
-name (e.g. "MAS architecture", "UOB workshop", "ICA upgrade").
+name (e.g. "Acme architecture", "Globex workshop", "Initech upgrade").
 
 Search in batches — max 100 results per query. If results are truncated,
 paginate.
@@ -91,8 +91,8 @@ Followed by:
 ### 7. Import (on request only)
 Do NOT auto-import files. After presenting the report, wait for
 instructions like:
-- "Import all recommended for MAS"
-- "Import file #3 and #7 for SGPools"
+- "Import all recommended for Acme Corp"
+- "Import file #3 and #7 for Globex"
 - "Skip all, just log the report"
 
 When importing:
