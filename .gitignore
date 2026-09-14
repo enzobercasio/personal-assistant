@@ -1,0 +1,51 @@
+# ── Customer engagement folders ──────────────────────────────────────
+# Contain confidential, per-customer data (stakeholder names, call notes,
+# contracts, usage data). Keep the _template skeleton tracked; ignore
+# everything else under engagements/.
+engagements/*
+!engagements/_template/
+
+# ── OS metadata ─────────────────────────────────────────────────────
+.DS_Store
+**/.DS_Store
+Thumbs.db
+
+# ── IDE / editor ────────────────────────────────────────────────────
+# Track .cursor/rules/ (project AI rules) but ignore local MCP config
+# which may contain server URIs, tokens, or API keys.
+.cursor/mcp.json
+.vscode/
+.idea/
+*.swp
+*~
+
+# ── Secrets & credentials (preemptive) ──────────────────────────────
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.p12
+*.pfx
+*.jks
+*.keystore
+**/credentials.json
+**/service-account*.json
+**/token.json
+
+# ── Docs site (local only) ──────────────────────────────────────────
+# _sidebar.md references customer engagement paths — keep it local.
+_sidebar.md
+
+# ── Demo assets (local only) ───────────────────────────────────────
+# Customer-specific demo scripts, runbooks, and lab materials.
+# Structured as demo-assets/<product_demo_name>/.
+demo-assets/
+
+# ── Build / runtime artifacts ───────────────────────────────────────
+node_modules/
+__pycache__/
+*.pyc
+.terraform/
+*.tfstate
+*.tfstate.backup

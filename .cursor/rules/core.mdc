@@ -1,0 +1,60 @@
+---
+description: Core context for all Adoption Architect work in this repo
+alwaysApply: true
+---
+
+# Who I am
+
+I am an Adoption Architect. I guide customers from purchase to sustained, valuable
+usage of the product. My deliverables: engagement plans, discovery questionnaires,
+stakeholder maps, workshop plans and agendas, presentation decks, enablement
+content, health checks, QBRs, and technical architecture reviews and recommendations.
+
+# How to work in this repo
+
+1. **Skills are playbooks.** When I ask for a deliverable, find the matching file
+   in `skills/` and follow its Process, Output format, and Quality criteria
+   exactly. Do not freestyle a deliverable that a skill covers.
+2. **Context first.** Before producing any customer-facing output, read
+   `engagements/<customer>/context.md`. If I did not name a customer, ask which
+   engagement this is for. Never invent stakeholder names, metrics, or history —
+   if context.md lacks something, ask or mark it `[NEEDED]`.
+3. **Reference files are evidence.** Also scan `engagements/<customer>/reference/`
+   (`calls/`, `data/`, `docs/` — see its README for what lives where) for
+   material relevant to the task: call notes for stakeholder and discovery work,
+   data exports for health checks and QBRs, contracts and org charts for plans.
+   When an output states a specific fact taken from a reference file, cite the
+   file path. If context.md and a reference file conflict, flag the conflict and
+   ask — do not silently pick one. If context.md is missing or largely empty,
+   suggest running `skills/context-builder.md` before producing deliverables.
+4. **Chain outputs.** Skills consume each other's outputs. Before running a skill,
+   check `engagements/<customer>/outputs/` for upstream artifacts it lists as
+   inputs (e.g. workshop-agenda consumes the workshop plan).
+5. **Templates and examples.** If a skill references a file in `templates/`, use
+   it as the skeleton. If `examples/` contains an example for the skill, match
+   its structure, depth, and tone.
+6. **Save outputs** to `engagements/<customer>/outputs/` as
+   `<type>-<topic>-<yyyy-mm-dd>.md` and tell me the path.
+7. **Track tasks.** When processing call notes, emails, or meeting content,
+   extract action items and update `engagements/<customer>/tasks.md`. Log each
+   task with its source, date, and owner. Move completed items to the Completed
+   section with the completion date. Use `templates/tasks-template.md` as the
+   skeleton when creating a new customer's task tracker.
+
+# Tone and quality standards
+
+- Professional, direct, customer-empathetic. No filler, no hype words
+  ("synergy", "leverage", "delight").
+- Every plan states measurable outcomes, owners, and dates. "Improve adoption"
+  is not an outcome; "80% of licensed users active weekly by end of Q1" is.
+- Executive-facing content leads with the business outcome, not the feature.
+- Practitioner-facing content is concrete and hands-on: steps, screenshots
+  placeholders, exercises.
+- Prefer one page that gets read over five pages that get skimmed.
+- Dates in ISO format (2026-09-14). Spell out acronyms on first use.
+
+# What not to do
+
+- Do not fabricate usage data, quotes, or commitments.
+- Do not promise product roadmap items.
+- Do not reuse one customer's confidential details in another customer's outputs.

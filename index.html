@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Adoption Architect — Outputs</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/docsify-themeable@0/dist/css/theme-simple.css">
+  <style>
+    :root {
+      --base-font-size: 15px;
+      --theme-color: #e00;
+      --sidebar-width: 280px;
+      --content-max-width: none;
+    }
+    /* Widen the main content area — fill available space after sidebar */
+    .markdown-section {
+      max-width: calc(100vw - var(--sidebar-width) - 80px);
+      padding: 30px 45px 40px;
+    }
+    /* Tables: scrollable when wide, generous spacing */
+    .markdown-section table {
+      font-size: 13px;
+      width: 100%;
+      display: table;
+      table-layout: auto;
+      border-collapse: collapse;
+    }
+    .markdown-section table th,
+    .markdown-section table td {
+      padding: 8px 12px;
+      white-space: normal;
+      word-break: normal;
+      overflow-wrap: break-word;
+      vertical-align: top;
+      line-height: 1.5;
+    }
+    /* Narrow index columns stay compact */
+    .markdown-section table th:first-child,
+    .markdown-section table td:first-child {
+      white-space: nowrap;
+      width: 1%;
+    }
+    /* Wrap table in a horizontal scroller for very wide tables */
+    .markdown-section .table-wrapper,
+    .markdown-section table {
+      overflow-x: auto;
+    }
+    /* Prevent code blocks from shrinking */
+    .markdown-section pre {
+      max-width: 100%;
+      overflow-x: auto;
+    }
+    .sidebar-nav li a { font-size: 14px; }
+
+    /* Resizable sidebar — drag handle on right edge */
+    .sidebar {
+      position: relative;
+      width: var(--sidebar-width);
+      min-width: 180px;
+      max-width: 50vw;
+      transition: none;
+    }
+    .sidebar-resize-handle {
+      position: absolute;
+      top: 0;
+      right: -3px;
+      width: 6px;
+      height: 100%;
+      cursor: col-resize;
+      z-index: 100;
+      background: transparent;
+      transition: background 0.15s;
+    }
+    .sidebar-resize-handle:hover,
+    .sidebar-resize-handle.dragging {
+      background: var(--theme-color, #e00);
+      opacity: 0.4;
+    }
+
+    /* Collapsible sidebar sections — top level */
+    .sidebar-nav > ul > li > ul {
+      display: none;
+    }
+    .sidebar-nav > ul > li.open > ul {
+      display: block;
+    }
+    .sidebar-nav > ul > li > p,
+    .sidebar-nav > ul > li > strong {
+      cursor: pointer;
+      user-select: none;
+      position: relative;
+      padding-left: 1em;
+    }
+    .sidebar-nav > ul > li > p::before,
+    .sidebar-nav > ul > li > strong::before {
+      content: '▸';
+      position: absolute;
+      left: 0;
+      transition: transform 0.15s ease;
+    }
+    .sidebar-nav > ul > li.open > p::before,
+    .sidebar-nav > ul > li.open > strong::before {
+      transform: rotate(90deg);
+    }
+
+    /* Collapsible sidebar sections — nested (e.g. customers under Engagements) */
+    .sidebar-nav > ul > li > ul > li > ul {
+      display: none;
+    }
+    .sidebar-nav > ul > li > ul > li.open > ul {
+      display: block;
+    }
+    .sidebar-nav > ul > li > ul > li > p,
+    .sidebar-nav > ul > li > ul > li > strong {
+      cursor: pointer;
+      user-select: none;
+      position: relative;
+      padding-left: 1em;
+    }
+    .sidebar-nav > ul > li > ul > li > p::before,
+    .sidebar-nav > ul > li > ul > li > strong::before {
+      content: '▸';
+      position: absolute;
+      left: 0;
+      transition: transform 0.15s ease;
+    }
+    .sidebar-nav > ul > li > ul > li.open > p::before,
+    .sidebar-nav > ul > li > ul > li.open > strong::before {
+      transform: rotate(90deg);
+    }
+  </style>
+</head>
+<body>
+  <div id="app">Loading…</div>
+  <script>
+    window.$docsify = {
+      name: 'Adoption Architect',
+      repo: false,
+      loadSidebar: true,
+      subMaxLevel: 3,
+      search: 'auto',
+      auto2top: true,
+      markdown: {
+        renderer: {
+          code: function(code, lang) {
+            if (lang === 'mermaid') {
+              return '<div class="mermaid">' + code + '</div>';
+            }
+            return this.origin.code.apply(this, arguments);
+          }
+        }
+      }
+    };
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/docsify@4/lib/docsify.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/docsify@4/lib/plugins/search.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+  <script>
+    mermaid.initialize({ startOnLoad: false, theme: 'default' });
+    // Re-render mermaid diagrams after docsify loads each page
+    var mermaidObserver = new MutationObserver(function() {
+      document.querySelectorAll('.mermaid').forEach(function(el) {
+        if (el.getAttribute('data-processed')) return;
+        try { mermaid.run({ nodes: [el] }); } catch(e) {}
+      });
+    });
+    document.addEventListener('DOMContentLoaded', function() {
+      var content = document.querySelector('.markdown-section');
+      if (content) {
+        mermaidObserver.observe(content, { childList: true, subtree: true });
+      }
+    });
+  </script>
+  <script>
+    // Collapsible sidebar sections (top-level and nested)
+    function initCollapsible() {
+      // Target both top-level and second-level list items that have sub-lists
+      var selectors = [
+        '.sidebar-nav > ul > li',
+        '.sidebar-nav > ul > li > ul > li'
+      ];
+      selectors.forEach(function(sel) {
+        document.querySelectorAll(sel).forEach(function(li) {
+          var header = li.querySelector(':scope > p, :scope > strong');
+          var sublist = li.querySelector(':scope > ul');
+          if (!header || !sublist) return;
+
+          // Avoid re-binding
+          if (header.dataset.collapsible) return;
+          header.dataset.collapsible = 'true';
+
+          header.addEventListener('click', function(e) {
+            e.stopPropagation();
+            li.classList.toggle('open');
+          });
+        });
+      });
+
+      // Auto-expand sections containing the active link
+      var active = document.querySelector('.sidebar-nav .active');
+      if (active) {
+        var el = active.closest('li');
+        while (el) {
+          el.classList.add('open');
+          el = el.parentElement ? el.parentElement.closest('li') : null;
+        }
+      }
+    }
+
+    // Re-run after each page navigation (docsify re-renders sidebar)
+    var observer = new MutationObserver(function() {
+      initCollapsible();
+    });
+    document.addEventListener('DOMContentLoaded', function() {
+      var sidebar = document.querySelector('.sidebar-nav');
+      if (sidebar) {
+        observer.observe(sidebar, { childList: true, subtree: true });
+        initCollapsible();
+      }
+    });
+  </script>
+  <script>
+    // Draggable sidebar resize handle
+    document.addEventListener('DOMContentLoaded', function() {
+      var sidebar = document.querySelector('.sidebar');
+      if (!sidebar) return;
+
+      var handle = document.createElement('div');
+      handle.className = 'sidebar-resize-handle';
+      sidebar.appendChild(handle);
+
+      var startX, startWidth;
+      handle.addEventListener('mousedown', function(e) {
+        e.preventDefault();
+        startX = e.clientX;
+        startWidth = sidebar.getBoundingClientRect().width;
+        handle.classList.add('dragging');
+        document.body.style.cursor = 'col-resize';
+        document.body.style.userSelect = 'none';
+
+        function onMouseMove(e) {
+          var newWidth = Math.min(Math.max(startWidth + (e.clientX - startX), 180), window.innerWidth * 0.5);
+          sidebar.style.width = newWidth + 'px';
+          document.documentElement.style.setProperty('--sidebar-width', newWidth + 'px');
+        }
+        function onMouseUp() {
+          handle.classList.remove('dragging');
+          document.body.style.cursor = '';
+          document.body.style.userSelect = '';
+          document.removeEventListener('mousemove', onMouseMove);
+          document.removeEventListener('mouseup', onMouseUp);
+        }
+        document.addEventListener('mousemove', onMouseMove);
+        document.addEventListener('mouseup', onMouseUp);
+      });
+    });
+  </script>
+</body>
+</html>
