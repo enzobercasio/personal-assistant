@@ -33,7 +33,6 @@ Add the following servers:
 |------------|---------|-------------|
 | **Google Workspace** | Gmail search & read, calendar | `email-scanner`, `daily-assistant` |
 | **Google Drive** | Search, read, list files across Drive | `drive-scanner` |
-| **Slack** | Search messages, post updates | Slack-based collaboration |
 | **Smartsheet** | Read adoption pipeline sheets | `adoption-architect-smartsheet` |
 
 Each server requires OAuth authentication. After adding a server, click **Authenticate** and follow the browser flow. Verify connection status:
