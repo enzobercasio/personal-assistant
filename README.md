@@ -23,7 +23,7 @@ Cursor will automatically load the project rules from `.cursor/rules/core.mdc`, 
 
 ### 3. Configure MCP Servers
 
-MCP (Model Context Protocol) servers give the AI assistant access to external tools — Gmail, Google Drive, Slack, and Smartsheet. These power the email-scanner, drive-scanner, and other automated skills.
+MCP (Model Context Protocol) servers give the AI assistant access to external tools — Gmail, Google Drive, and Smartsheet. These power the email-scanner, drive-scanner, and other automated skills.
 
 **Go to:** Cursor → Settings (⌘,) → MCP
 
@@ -40,6 +40,139 @@ Each server requires OAuth authentication. After adding a server, click **Authen
 > In any chat, ask: *"Check MCP status"* — the assistant will test each server.
 
 **Note:** MCP config is stored in `.cursor/mcp.json` which is gitignored (it may contain tokens). Each architect configures their own.
+
+#### 3a. Google Drive MCP — Setup
+
+The Google Drive MCP uses the [WagnerLabs Google Drive MCP server](https://github.com/nicwagner/gdrive-mcp). It enables the assistant to search, list, read, and write Google Drive files (Docs, Sheets, Slides).
+
+**Step 1 — Install the MCP server:**
+
+```bash
+# Clone the server
+git clone https://github.com/nicwagner/gdrive-mcp.git ~/keys/gdrive-mcp
+
+# Install dependencies and build
+cd ~/keys/gdrive-mcp
+npm install && npm run build
+```
+
+**Step 2 — Create Google Cloud OAuth credentials:**
+
+1. Go to [Google Cloud Console](https://console.cloud.google.com/)
+2. Create a new project (or reuse an existing one)
+3. Enable the following APIs:
+   - **Google Drive API**
+   - **Google Sheets API**
+   - **Google Docs API**
+   - **Google Slides API**
+4. Go to **APIs & Services → Credentials → Create Credentials → OAuth client ID**
+5. Application type: **Desktop app**
+6. Download the JSON file and save it as:
+   ```
+   ~/keys/gdrive-mcp/gcp-oauth.keys.json
+   ```
+
+**Step 3 — Authenticate:**
+
+```bash
+cd ~/keys/gdrive-mcp
+node dist/index.js
+```
+
+A browser window opens. Sign in with your Google account and grant access. The token is saved locally (auto-refreshes).
+
+**Step 4 — Add to Cursor:**
+
+Go to **Cursor → Settings → MCP → Add Server** and configure:
+
+- **Name:** `gdrive`
+- **Type:** Command (stdio)
+- **Command:** `node`
+- **Args:** `["/Users/<your-username>/keys/gdrive-mcp/dist/index.js"]`
+
+Or manually add to `.cursor/mcp.json`:
+
+```json
+{
+  "mcpServers": {
+    "gdrive": {
+      "command": "node",
+      "args": ["/Users/<your-username>/keys/gdrive-mcp/dist/index.js"]
+    }
+  }
+}
+```
+
+**Step 5 — Verify:**
+
+In a Cursor chat, ask:
+
+> "Search my Google Drive for recent documents"
+
+If it returns results, the connection is working.
+
+**Available tools:** `gdrive_search`, `gdrive_list_files`, `gdrive_get_file`, `gdrive_read_file`, `gdrive_get_spreadsheet_info`, `gdrive_get_sheet_values`, `gdrive_get_document_content`, and more.
+
+---
+
+#### 3b. Google Workspace MCP — Setup
+
+The Google Workspace MCP provides access to Gmail (search, read, label, filter emails). This is what powers the `email-scanner` skill.
+
+**Option A — Cursor built-in (recommended):**
+
+Cursor has a built-in Google Workspace integration:
+
+1. Go to **Cursor → Settings → MCP**
+2. Look for **Google Workspace** in the available servers list
+3. Click **Add** → **Authenticate**
+4. Sign in with your Google account in the browser
+5. Grant Gmail permissions (read, search, labels)
+
+The server appears as `user-google-workspace` once connected.
+
+**Option B — Manual setup with Google OAuth:**
+
+If the built-in option is unavailable, set up manually:
+
+1. In [Google Cloud Console](https://console.cloud.google.com/), enable the **Gmail API** on the same project used for Google Drive
+2. Use the same OAuth Desktop App credentials (or create a new one)
+3. Install a Gmail MCP server (e.g. [google-workspace-mcp](https://github.com/nicwagner/google-workspace-mcp)):
+   ```bash
+   git clone https://github.com/nicwagner/google-workspace-mcp.git ~/keys/google-workspace-mcp
+   cd ~/keys/google-workspace-mcp
+   npm install && npm run build
+   ```
+4. Place your OAuth credentials JSON in the server directory
+5. Run once to authenticate:
+   ```bash
+   node dist/index.js
+   ```
+6. Add to Cursor MCP settings (same pattern as Google Drive above)
+
+**Step — Verify:**
+
+In a Cursor chat, ask:
+
+> "Search my Gmail for emails from today"
+
+If it returns email results, the connection is working.
+
+**Available tools:** `search_emails`, `read_email`, `list_labels`, `get_or_create_label`, `create_filter`, `list_filters`, `download_attachment`.
+
+---
+
+#### 3c. Troubleshooting MCP connections
+
+| Issue | Fix |
+|-------|-----|
+| Server shows "needsAuth" | Click **Authenticate** in Cursor Settings → MCP, or re-run the server's auth flow in terminal |
+| `read_email` returns "undefined" | Ensure you pass the `id` parameter (not `messageId`) — check tool schema with the assistant |
+| Server disconnects after idle | Restart Cursor or toggle the server off/on in MCP settings |
+| OAuth token expired | Re-run the server binary once in terminal to refresh the token, then restart Cursor |
+| "Permission denied" errors | Check that the correct Google APIs are enabled in Cloud Console and your OAuth consent screen includes the required scopes |
+
+> **Tip:** Ask the assistant *"Check MCP status"* at any time. It will call `get_status` on Google Workspace and attempt a test search on Google Drive to confirm both are live.
 
 ### 4. Create your first engagement
 
