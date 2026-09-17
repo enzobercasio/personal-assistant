@@ -42,6 +42,11 @@ _sidebar.md
 # Structured as demo-assets/<product_demo_name>/.
 demo-assets/
 
+# ── Product intelligence (local only) ─────────────────────────────
+# Contains internal Red Hat emails, win wires, sales bulletins, and
+# product announcements — confidential internal content.
+products/
+
 # ── Build / runtime artifacts ───────────────────────────────────────
 node_modules/
 __pycache__/

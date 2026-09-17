@@ -67,6 +67,28 @@ if [ -d "$ROOT/demo-assets" ] && [ "$(find "$ROOT/demo-assets" -mindepth 1 -maxd
   done
 fi
 
+# ── Product intelligence ─────────────────────────────────────────────
+if [ -d "$ROOT/products" ]; then
+  echo "" >> "$OUT"
+  echo "- **Products**" >> "$OUT"
+  [ -f "$ROOT/products/README.md" ] && \
+    echo "  - [Overview](products/README.md)" >> "$OUT"
+  for product_dir in "$ROOT"/products/*/; do
+    [ -d "$product_dir" ] || continue
+    product_name="$(basename "$product_dir")"
+    product_label="$(echo "$product_name" | tr '[:lower:]' '[:upper:]' | sed 's/-/ /g')"
+    has_product_files=false
+    for f in "$product_dir"*.md; do
+      [ -f "$f" ] || continue
+      if [ "$has_product_files" = false ]; then
+        echo "  - **${product_label}**" >> "$OUT"
+        has_product_files=true
+      fi
+      echo "    - [$(label_from_file "$f")](products/${product_name}/$(basename "$f"))" >> "$OUT"
+    done
+  done
+fi
+
 # ── Customer engagements ────────────────────────────────────────────
 echo "" >> "$OUT"
 echo "- **Engagements**" >> "$OUT"
